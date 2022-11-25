@@ -6276,28 +6276,6 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
 		       vmcs_read16(VIRTUAL_PROCESSOR_ID));
 }
 
-u32 total_exits;
-u64 total_exit_time; 
-
-u32 total_type_exits[75];
-u64 total_type_exit_time[75];
-
-static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath) {
-	union vmx_exit_reason exit_reason = vmx->exit_reason;
-	u64 handler_start_timestamp = rdtsc();
-	u64 handler_end_timestamp;
-
-	int vmx_exit_handler_handler_resp = __handle_vmx_handle_exit(kvm_cpu, exit_fastpath);
-	handler_end_timestamp = rdtsc() - handler_start_timestamp;
-
-	total_exit_time += 1;
-	total_exit_time += handler_end_timestamp;
-	total_type_exits[exit_reason.basic] += 1;
-	total_type_exit_time[exit_reason.basic] += handler_end_timestamp;
-
-	return vmx_exit_handler_handler_resp;
-}
-
 /*
  * The guest has exited.  See if we can fix it or if we need userspace
  * assistance.
@@ -6479,6 +6457,29 @@ unexpected_vmexit:
 	vcpu->run->internal.data[0] = exit_reason.full;
 	vcpu->run->internal.data[1] = vcpu->arch.last_vmentry_cpu;
 	return 0;
+}
+
+u32 total_exits;
+u64 total_exit_time; 
+
+u32 total_type_exits[75];
+u64 total_type_exit_time[75];
+
+static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath) {
+	struct vcpu_vmx *vmx = to_vmx(vcpu);
+	union vmx_exit_reason exit_reason = vmx->exit_reason;
+	u64 handler_start_timestamp = rdtsc();
+	u64 handler_end_timestamp;
+
+	int vmx_exit_handler_handler_resp = __handle_vmx_handle_exit(vcpu, exit_fastpath);
+	handler_end_timestamp = rdtsc() - handler_start_timestamp;
+
+	total_exit_time += 1;
+	total_exit_time += handler_end_timestamp;
+	total_type_exits[exit_reason.basic] += 1;
+	total_type_exit_time[exit_reason.basic] += handler_end_timestamp;
+
+	return vmx_exit_handler_handler_resp;
 }
 
 static int vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)

@@ -1493,16 +1493,16 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
 }
 EXPORT_SYMBOL_GPL(kvm_cpuid);
 
+extern u32 total_exits;
+extern u64 total_exit_time; 
+extern u32 total_type_exits[75];
+extern u64 total_type_exit_time[75];
+
 int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
 {
 	u64 upper32_mask = 0xFFFFFFFF00000000;
 	u64 lower32_mask = 0x00000000FFFFFFFF;
 	u32 eax, ebx, ecx, edx;
-
-	extern u32 total_exits;
-	extern u64 total_exit_time; 
-	extern u32 total_type_exits[75];
-	extern u64 total_type_exit_time[75];
 
 	if (cpuid_fault_enabled(vcpu) && !kvm_require_cpl(vcpu, 0))
 		return 1;

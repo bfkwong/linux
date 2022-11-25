@@ -6461,9 +6461,13 @@ unexpected_vmexit:
 
 u32 total_exits = 0;
 u64 total_exit_time = 0; 
-
 u32 total_type_exits[75];
 u64 total_type_exit_time[75];
+
+EXPORT_SYMBOL(total_exits);
+EXPORT_SYMBOL(total_exit_time);
+EXPORT_SYMBOL(total_type_exits);
+EXPORT_SYMBOL(total_type_exit_time);
 
 static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath) {
 	struct vcpu_vmx *vmx = to_vmx(vcpu);

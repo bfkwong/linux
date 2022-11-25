@@ -6459,13 +6459,13 @@ unexpected_vmexit:
 	return 0;
 }
 
-u32 total_exits;
-u64 total_exit_time; 
-
-u32 total_type_exits[75];
-u64 total_type_exit_time[75];
 
 static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath) {
+	extern u32 total_exits;
+	extern u64 total_exit_time; 
+	extern u32 total_type_exits[75];
+	extern u64 total_type_exit_time[75];
+	
 	struct vcpu_vmx *vmx = to_vmx(vcpu);
 	union vmx_exit_reason exit_reason = vmx->exit_reason;
 	u64 handler_start_timestamp = rdtsc();
@@ -6474,7 +6474,7 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath) {
 	int vmx_exit_handler_handler_resp = __handle_vmx_handle_exit(vcpu, exit_fastpath);
 	handler_end_timestamp = rdtsc() - handler_start_timestamp;
 
-	total_exit_time += 1;
+	total_exits += 1;
 	total_exit_time += handler_end_timestamp;
 	total_type_exits[exit_reason.basic] += 1;
 	total_type_exit_time[exit_reason.basic] += handler_end_timestamp;

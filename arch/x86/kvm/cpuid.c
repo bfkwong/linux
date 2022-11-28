@@ -1524,7 +1524,7 @@ int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
 		ecx = (u32)(total_exit_time & lower32_mask);
 	} else if (eax == 0x4FFFFFFE) {
 		// Description: return the total number of exits for the exit number in ecx
-		return total_type_exits[ecx];
+		eax = total_type_exits[ecx];
 	} else if (eax == 0x4FFFFFFF) {
 		// Description: return the total time spent on VM exit for the exit number in ecx
 		// Part 1: Load high 32 bit into EBX

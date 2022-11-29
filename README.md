@@ -204,7 +204,7 @@ Now your login will be the following:
 
 #### Starting the VM 
 
-The GCP instruction is to install the following packages 
+The [GCP instruction](https://cloud.google.com/compute/docs/instances/nested-virtualization/creating-nested-vms) is to install the following packages 
 
 ```
 $ sudo apt update && sudo apt install qemu-kvm -y

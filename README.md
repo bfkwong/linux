@@ -270,7 +270,7 @@ $ cpuid -l <EAX value> -s <ECX value>
 
 ## 4. Exit types defined in SDM 
 
-This is the printout of all of the CPUID exit types. This is just partial sample output of the exit types that had values. For full output, go to > [https://drive.google.com/file/d/1yFToRCrdmN159PEACQuve9DPIIWerTOV/view?usp=sharing](https://drive.google.com/file/d/1yFToRCrdmN159PEACQuve9DPIIWerTOV/view?usp=sharing)
+This is the printout of all of the CPUID exit types. This is just partial sample output of the exit types that had values. For full output, go to [https://drive.google.com/file/d/1yFToRCrdmN159PEACQuve9DPIIWerTOV/view?usp=sharing](https://drive.google.com/file/d/1yFToRCrdmN159PEACQuve9DPIIWerTOV/view?usp=sharing)
 
 ```
 [root@localhost ~]# ./cpuid_test.sh 
@@ -298,6 +298,17 @@ CPU 0:
    0x4ffffffe 0x31: eax=0x000429ce ebx=0x00000000 ecx=0x00000031 edx=0xffff9c2d
 CPU 0:
    0x4ffffffe 0x36: eax=0x00000006 ebx=0x00000000 ecx=0x00000036 edx=0xffff9c2d
+```
+
+The content of `cpuid_test.sh` is 
+
+```
+#!/bin/bash
+
+for i in {1..75}
+do 
+  cpuid -l 0x4FFFFFFE -s "$i"
+done
 ```
 
 The 5 most frequent exits are: 

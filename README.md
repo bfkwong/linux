@@ -4,6 +4,14 @@ Group members:
 
 1. Bryan Kwong
 
+All of the changes made by me are in this PR: 
+
+https://github.com/bfkwong/linux/pull/1
+
+Video showing the running version of my modified kernel: 
+
+https://drive.google.com/file/d/1_wVp_QO6-voIcw6-4K_up0OL5S4wrhSn/view?usp=sharing
+
 ## 1. What part of the assignment did you do?
 
 I did the entire assignment by myself. 

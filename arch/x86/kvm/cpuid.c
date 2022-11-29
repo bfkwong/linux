@@ -1492,9 +1492,20 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
 	return exact;
 }
 EXPORT_SYMBOL_GPL(kvm_cpuid);
+u32 total_exits = 0;
+u64 total_exit_time = 0; 
+u32 total_type_exits[75];
+u64 total_type_exit_time[75];
+
+EXPORT_SYMBOL(total_exits);
+EXPORT_SYMBOL(total_exit_time);
+EXPORT_SYMBOL(total_type_exits);
+EXPORT_SYMBOL(total_type_exit_time);
 
 int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
 {
+	u64 upper32_mask = 0xFFFFFFFF00000000;
+	u64 lower32_mask = 0x00000000FFFFFFFF;
 	u32 eax, ebx, ecx, edx;
 
 	if (cpuid_fault_enabled(vcpu) && !kvm_require_cpl(vcpu, 0))
@@ -1502,7 +1513,27 @@ int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
 
 	eax = kvm_rax_read(vcpu);
 	ecx = kvm_rcx_read(vcpu);
-	kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, false);
+	if (eax == 0x4FFFFFFC) {
+		// Description: return the total number of VM exits in eax 
+		eax = total_exits;
+	} else if (eax == 0x4FFFFFFD) {
+		// Description: return the total time spent on VM exits
+		// Part 1: Load high 32 bit into EBX
+		ebx = (u32)((total_exit_time & upper32_mask) >> 32);
+		// Part 2: Load low 32 bit into ECX
+		ecx = (u32)(total_exit_time & lower32_mask);
+	} else if (eax == 0x4FFFFFFE) {
+		// Description: return the total number of exits for the exit number in ecx
+		eax = total_type_exits[ecx];
+	} else if (eax == 0x4FFFFFFF) {
+		// Description: return the total time spent on VM exit for the exit number in ecx
+		// Part 1: Load high 32 bit into EBX
+		ebx = (u32)((total_type_exit_time[ecx] & upper32_mask) >> 32);
+		// Part 2: Load low 32 bit into ECX
+		ecx = (u32)(total_type_exit_time[ecx] & lower32_mask);
+	} else {
+		kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, false);
+	}
 	kvm_rax_write(vcpu, eax);
 	kvm_rbx_write(vcpu, ebx);
 	kvm_rcx_write(vcpu, ecx);

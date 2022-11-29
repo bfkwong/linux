@@ -10,6 +10,11 @@ I did the entire assignment by myself.
 
 ## 2. Describe implementation steps in detail?
 
+See changes at these 2 files: 
+
+- `arch/x86/kvm/cpuid.c`
+- `arch/x86/kvm/vmx/vmx.c`
+
 ### Setting up the Linux Kernel
 
 First, we have to create a git fork of the Linux repo ([https://github.com/torvalds/linux](https://github.com/torvalds/linux)) and clone it onto our local machine. This is a really big repo so it might take a while to download. 
